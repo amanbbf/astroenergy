@@ -1,10 +1,11 @@
 import { Zap, LayoutDashboard, Store, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { motion } from 'motion/react';
+import type { TabType } from '../App';
 
 interface NavbarProps {
-  activeTab: 'home' | 'market' | 'dashboard';
-  setActiveTab: (tab: 'home' | 'market' | 'dashboard') => void;
+  activeTab: TabType;
+  setActiveTab: (tab: TabType) => void;
 }
 
 export default function Navbar({ activeTab, setActiveTab }: NavbarProps) {
@@ -29,7 +30,7 @@ export default function Navbar({ activeTab, setActiveTab }: NavbarProps) {
               <Zap className="w-6 h-6 text-[#111] group-hover:text-white" />
             </div>
             <span className="font-display font-black text-2xl tracking-tighter text-[#111] uppercase">
-              Green<span className="text-[#FF3366]">Grid</span>
+              Tro<span className="text-[#FF3366]">Energy</span>
             </span>
           </div>
 
@@ -61,8 +62,11 @@ export default function Navbar({ activeTab, setActiveTab }: NavbarProps) {
               <div className="text-[10px] text-[#111] font-mono font-bold uppercase">Balance</div>
               <div className="text-sm font-black text-[#FF3366] font-mono">2,450 kWh</div>
             </div>
-            <button className="bg-[#FF3366] hover:bg-[#111] text-white px-6 py-2 font-black uppercase tracking-wider border-2 border-[#111] brutal-shadow">
-              Connect
+            <button 
+              onClick={() => setActiveTab('login')}
+              className="bg-[#FF3366] hover:bg-[#111] text-white px-6 py-2 font-black uppercase tracking-wider border-2 border-[#111] brutal-shadow"
+            >
+              Sign In
             </button>
           </div>
 
@@ -108,8 +112,14 @@ export default function Navbar({ activeTab, setActiveTab }: NavbarProps) {
               );
             })}
             <div className="pt-4 mt-4">
-              <button className="w-full bg-[#FF3366] text-white px-4 py-4 font-black uppercase tracking-wider border-2 border-[#111] brutal-shadow">
-                Connect Wallet
+              <button 
+                onClick={() => {
+                  setActiveTab('login');
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full bg-[#FF3366] text-white px-4 py-4 font-black uppercase tracking-wider border-2 border-[#111] brutal-shadow"
+              >
+                Sign In
               </button>
             </div>
           </div>

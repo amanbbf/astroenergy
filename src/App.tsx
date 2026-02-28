@@ -2,11 +2,16 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import Features from './components/Features';
 import Marketplace from './components/Marketplace';
 import Dashboard from './components/Dashboard';
+import Login from './components/Login';
+import Register from './components/Register';
+
+export type TabType = 'home' | 'market' | 'dashboard' | 'login' | 'register';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'home' | 'market' | 'dashboard'>('home');
+  const [activeTab, setActiveTab] = useState<TabType>('home');
 
   return (
     <div className="min-h-screen text-[#111] selection:bg-[#CCFF00] selection:text-[#111]">
@@ -23,6 +28,7 @@ export default function App() {
               transition={{ duration: 0.3 }}
             >
               <Hero onExplore={() => setActiveTab('market')} />
+              <Features />
             </motion.div>
           )}
           {activeTab === 'market' && (
@@ -45,6 +51,28 @@ export default function App() {
               transition={{ duration: 0.3 }}
             >
               <Dashboard />
+            </motion.div>
+          )}
+          {activeTab === 'login' && (
+            <motion.div
+              key="login"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Login onNavigate={(tab) => setActiveTab(tab)} />
+            </motion.div>
+          )}
+          {activeTab === 'register' && (
+            <motion.div
+              key="register"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Register onNavigate={(tab) => setActiveTab(tab)} />
             </motion.div>
           )}
         </AnimatePresence>
