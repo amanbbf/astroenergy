@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   UserPlus, ArrowRight, ArrowLeft, Sun, Home, TrendingUp, 
-  Wind, Leaf, Building, Factory, DollarSign, Zap, CheckCircle 
+  Wind, Leaf, Building, Factory, DollarSign, Zap, CheckCircle,
+  MapPin, UploadCloud, ShieldCheck
 } from 'lucide-react';
 
 type Role = 'consumer' | 'producer' | 'investor' | '';
@@ -22,7 +23,11 @@ export default function Register({ onNavigate }: { onNavigate: (tab: 'login' | '
     monthlyUsage: '',
     // Investor specifics
     investmentRange: '',
-    preferredTech: ''
+    preferredTech: '',
+    // KYC & Location
+    location: '',
+    idUploaded: false,
+    termsAccepted: false
   });
 
   const handleNext = (e?: React.FormEvent) => {
@@ -51,7 +56,7 @@ export default function Register({ onNavigate }: { onNavigate: (tab: 'login' | '
         {/* Progress Bar */}
         <div className="mb-8 flex items-center justify-between relative">
           <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-2 bg-[#111] -z-10"></div>
-          {[1, 2, 3].map((num) => (
+          {[1, 2, 3, 4].map((num) => (
             <div 
               key={num} 
               className={`w-12 h-12 border-4 border-[#111] flex items-center justify-center font-black text-xl transition-colors ${
@@ -223,7 +228,7 @@ export default function Register({ onNavigate }: { onNavigate: (tab: 'login' | '
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                onSubmit={handleSubmit}
+                onSubmit={handleNext}
                 className="space-y-6"
               >
                 <div>
@@ -345,7 +350,104 @@ export default function Register({ onNavigate }: { onNavigate: (tab: 'login' | '
                   </button>
                   <button 
                     type="submit"
-                    className="w-2/3 bg-[#FF3366] text-white border-4 border-[#111] p-4 font-black uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#111] transition-colors shadow-[6px_6px_0px_#111]"
+                    className="w-2/3 bg-[#00E5FF] text-[#111] border-4 border-[#111] p-4 font-black uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#111] hover:text-white transition-colors shadow-[6px_6px_0px_#111]"
+                  >
+                    Continue <ArrowRight className="w-5 h-5" />
+                  </button>
+                </div>
+              </motion.form>
+            )}
+
+            {/* STEP 4: KYC & VERIFICATION */}
+            {step === 4 && (
+              <motion.form 
+                key="step4"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                onSubmit={handleSubmit}
+                className="space-y-6"
+              >
+                <div>
+                  <h2 className="text-4xl font-black uppercase tracking-tighter text-[#111] mb-2">KYC & Verification</h2>
+                  <p className="text-[#111] font-bold mb-8">Step 4: Secure the grid. Verify your identity and location.</p>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <label className="block text-sm font-black uppercase tracking-wider text-[#111]">Service Location / Address</label>
+                    <div className="flex gap-2">
+                      <input 
+                        type="text" 
+                        value={formData.location}
+                        onChange={(e) => updateForm('location', e.target.value)}
+                        placeholder="Enter your full address"
+                        className="w-full bg-[#F4F0EA] border-4 border-[#111] p-4 font-bold text-[#111] focus:outline-none focus:bg-[#CCFF00] shadow-[4px_4px_0px_#111]"
+                        required
+                      />
+                      <button 
+                        type="button"
+                        onClick={() => updateForm('location', '123 Green Ave, Eco City, EC 90210')}
+                        className="bg-[#CCFF00] border-4 border-[#111] p-4 flex items-center justify-center hover:bg-[#111] hover:text-white transition-colors shadow-[4px_4px_0px_#111]"
+                        title="Auto-detect location (Mock)"
+                      >
+                        <MapPin className="w-6 h-6" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="block text-sm font-black uppercase tracking-wider text-[#111]">Government ID Upload</label>
+                    <div 
+                      onClick={() => updateForm('idUploaded', 'true')}
+                      className={`border-4 border-dashed border-[#111] p-8 text-center cursor-pointer transition-all ${
+                        formData.idUploaded 
+                          ? 'bg-[#00E5FF] shadow-[4px_4px_0px_#111]' 
+                          : 'bg-[#F4F0EA] hover:bg-[#CCFF00]'
+                      }`}
+                    >
+                      {formData.idUploaded ? (
+                        <div className="flex flex-col items-center text-[#111]">
+                          <ShieldCheck className="w-12 h-12 mb-2" />
+                          <span className="font-black uppercase tracking-wider">ID Verified Successfully</span>
+                          <span className="text-xs font-bold mt-1">(Mock Data)</span>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center text-[#111]">
+                          <UploadCloud className="w-12 h-12 mb-2" />
+                          <span className="font-black uppercase tracking-wider">Click to Upload ID</span>
+                          <span className="text-xs font-bold mt-1">Passport, Driver's License, or National ID</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <label className="flex items-start gap-4 p-4 border-4 border-[#111] bg-white shadow-[4px_4px_0px_#111] cursor-pointer hover:bg-[#F4F0EA] transition-colors">
+                    <input 
+                      type="checkbox" 
+                      checked={formData.termsAccepted}
+                      onChange={(e) => updateForm('termsAccepted', e.target.checked ? 'true' : '')}
+                      className="w-6 h-6 mt-1 border-4 border-[#111] appearance-none checked:bg-[#FF3366] relative checked:after:content-['✓'] checked:after:absolute checked:after:text-white checked:after:left-1 checked:after:-top-1 checked:after:text-lg checked:after:font-black"
+                      required
+                    />
+                    <span className="font-bold text-sm text-[#111]">
+                      I agree to the <span className="underline decoration-2 underline-offset-2">P2P Energy Trading Terms & Conditions</span> and consent to the KYC verification process.
+                    </span>
+                  </label>
+                </div>
+
+                <div className="flex gap-4 pt-8">
+                  <button 
+                    type="button"
+                    onClick={handlePrev}
+                    className="w-1/3 bg-white text-[#111] border-4 border-[#111] p-4 font-black uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#F4F0EA] transition-colors shadow-[4px_4px_0px_#111]"
+                  >
+                    <ArrowLeft className="w-5 h-5" /> Back
+                  </button>
+                  <button 
+                    type="submit"
+                    disabled={!formData.idUploaded || !formData.termsAccepted}
+                    className="w-2/3 bg-[#FF3366] text-white border-4 border-[#111] p-4 font-black uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#111] transition-colors shadow-[6px_6px_0px_#111] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Complete <Zap className="w-5 h-5 fill-current" />
                   </button>
